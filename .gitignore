@@ -1,0 +1,15 @@
+# made by the robot (can be remade any time)
+out/
+sheets/
+presets/*
+!presets/v2/
+presets/v2/*
+!presets/v2/*-preset.png
+# never in git: study downloads of other people's videos, old backups, Python caches, tools + voice models
+research/
+old/
+__pycache__/
+*.pyc
+node_modules/
+*.wav
+*.mp4

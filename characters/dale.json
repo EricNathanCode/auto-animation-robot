@@ -1,0 +1,15 @@
+{
+  "id": "dale",
+  "name": "Dale",
+  "role": "Story cast · the husband (steak story)",
+  "goodFor": "real-life / Reddit stories",
+  "version": "v2",
+  "body": "adult",
+  "skin": "peach",
+  "voice": "man",
+  "hair": { "style": "short", "color": "#5A3A22" },
+  "top": { "style": "blazer", "color": "#2F3E6E", "shirt": "#DDE3EC" },
+  "bottom": { "style": "pants", "color": "#3A3F4A" },
+  "shoes": { "style": "plain", "color": "#2A2426" },
+  "wardrobe": ["short brown hair", "navy date-night blazer + light shirt", "dark trousers"]
+}

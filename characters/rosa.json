@@ -1,0 +1,15 @@
+{
+  "id": "rosa",
+  "name": "Rosa",
+  "role": "Story cast · the wife (steak story)",
+  "goodFor": "real-life / Reddit stories",
+  "version": "v2",
+  "body": "adult",
+  "skin": "tan",
+  "voice": "woman",
+  "hair": { "style": "curly", "color": "#9C4421" },
+  "top": { "style": "tee", "color": "#2BA59A" },
+  "bottom": { "style": "skirt", "color": "#1F6F66" },
+  "shoes": { "style": "flats", "color": "#2A2426" },
+  "wardrobe": ["curly auburn hair", "teal dress"]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "bjorn",
+  "name": "Bjorn",
+  "role": "Sample cast · adult",
+  "goodFor": "history (Vikings)",
+  "version": "v1",
+  "body": "adult",
+  "skin": "peach",
+  "voice": "man (deep)",
+  "hair": { "style": "short", "color": "#D9772B" },
+  "hat": { "style": "helmet", "color": "#A9B4C2", "band": "#B8873A" },
+  "top": { "style": "tunic", "color": "#3E6FB0", "belt": "#6B4226", "buckle": "#E2B33C" },
+  "bottom": { "style": "pants", "color": "#7A6A58" },
+  "shoes": { "style": "boots", "color": "#4A3020", "fur": "#C9A37A" },
+  "extras": { "beard": { "color": "#D9772B" }, "cape": { "color": "#8A5A3B", "fur": "#C9A37A" } },
+  "wardrobe": ["ginger beard + short hair", "iron helmet, bronze band", "blue tunic + leather belt", "brown fur cape", "brown trousers", "fur-top boots"]
+}

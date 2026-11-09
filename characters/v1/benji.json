@@ -1,0 +1,16 @@
+{
+  "id": "benji",
+  "name": "Benji",
+  "role": "Sample cast · kid",
+  "goodFor": "real-life / school stories",
+  "version": "v1",
+  "body": "kid",
+  "skin": "tan",
+  "voice": "kid (boy)",
+  "hair": { "style": "curly", "color": "#2B1E1A" },
+  "top": { "style": "hoodie", "color": "#E8B23A", "patch": { "color": "#2BA59A" } },
+  "bottom": { "style": "shorts", "color": "#2F3E6E" },
+  "shoes": { "style": "sneakers", "color": "#D9443B" },
+  "extras": { "glasses": { "color": "#D9443B" } },
+  "wardrobe": ["curly black hair", "round red glasses", "mustard hoodie + bolt patch", "navy shorts", "red sneakers"]
+}

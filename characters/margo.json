@@ -1,0 +1,16 @@
+{
+  "id": "margo",
+  "name": "Margo",
+  "role": "Story cast · the boss (steak story)",
+  "goodFor": "real-life / Reddit stories",
+  "version": "v2",
+  "body": "adult",
+  "skin": "light",
+  "voice": "woman (lower)",
+  "hair": { "style": "bob", "color": "#CFC8BF" },
+  "top": { "style": "blazer", "color": "#6A4C93", "shirt": "#FFFFFF" },
+  "bottom": { "style": "skirt", "color": "#3A3350" },
+  "shoes": { "style": "flats", "color": "#3A3350" },
+  "extras": { "pearls": { "color": "#FFF4DC" } },
+  "wardrobe": ["silver bob", "purple blazer + white shirt", "pearl necklace"]
+}

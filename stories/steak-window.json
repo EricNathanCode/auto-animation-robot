@@ -1,0 +1,491 @@
+{
+  "id": "steak-window",
+  "upload_title": "He Threw His Dinner Out the Window",
+  "source": "Retold in our own words from a Reddit r/tifu story (2015). No usernames, no screenshots, no lines copied.",
+  "genre": "real life (Reddit) · funny",
+  "shape": "Style Bible 7 parts: hook, stakes, mockery, worse, turn, fact, payoff",
+  "scene": "dining",
+  "mood": "lamp",
+  "design": "v2",
+  "fps": 30,
+  "lead": 0,
+  "gap": 0.12,
+  "tail": 0.4,
+  "captions": {
+    "words": 2,
+    "chars": 12,
+    "y": 1420,
+    "size": 100
+  },
+  "cast": {
+    "dale": {
+      "file": "characters/dale.json",
+      "x": 190,
+      "face": "right",
+      "eyes": "open"
+    },
+    "rosa": {
+      "file": "characters/rosa.json",
+      "x": 540,
+      "face": "front",
+      "eyes": "open"
+    },
+    "margo": {
+      "file": "characters/margo.json",
+      "x": 890,
+      "face": "left",
+      "eyes": "open"
+    }
+  },
+  "voices": {
+    "narrator": {
+      "engine": "kokoro",
+      "voice": "am_michael",
+      "speed": 1.1
+    },
+    "dale": {
+      "engine": "kokoro",
+      "voice": "am_fenrir",
+      "speed": 1.05
+    },
+    "rosa": {
+      "engine": "kokoro",
+      "voice": "af_heart",
+      "speed": 1.05
+    },
+    "margo": {
+      "engine": "kokoro",
+      "voice": "bf_emma",
+      "speed": 1
+    }
+  },
+  "props": {
+    "plate1": {
+      "kind": "plate",
+      "x": 190,
+      "y": 1318
+    },
+    "plate2": {
+      "kind": "plate",
+      "x": 540,
+      "y": 1318
+    },
+    "plate3": {
+      "kind": "plate",
+      "x": 890,
+      "y": 1318
+    },
+    "steak1": {
+      "kind": "steak",
+      "raw": true,
+      "x": 190,
+      "y": 1300,
+      "hidden": true
+    },
+    "steak2": {
+      "kind": "steak",
+      "x": 540,
+      "y": 1300,
+      "hidden": true
+    },
+    "steak3": {
+      "kind": "steak",
+      "x": 890,
+      "y": 1300,
+      "hidden": true
+    },
+    "smear": {
+      "kind": "smear",
+      "x": 820,
+      "y": 800,
+      "len": 0,
+      "hidden": true,
+      "layer": "near"
+    }
+  },
+  "cards": {
+    "birds": {
+      "kind": "poster",
+      "title": [
+        "BIRDS",
+        "VS WINDOWS"
+      ],
+      "art": {
+        "style": "bird"
+      },
+      "artY": 20,
+      "artScale": 2.1,
+      "lines": [
+        "CLEAN GLASS",
+        "IS INVISIBLE"
+      ],
+      "paper": "#EAF4FB",
+      "accent": "#2F80ED"
+    },
+    "phone": {
+      "kind": "phone",
+      "title": [
+        "Wife"
+      ],
+      "bubbles": [
+        [
+          "My boss can't stop",
+          "laughing about you."
+        ],
+        [
+          "Love you,",
+          "steak boy."
+        ]
+      ]
+    }
+  },
+  "beats": [
+    {
+      "who": "narrator",
+      "text": "He threw his steak out a window in the middle of a fancy dinner.",
+      "shot": "close dale push",
+      "cast": {
+        "dale": {
+          "eyes": "squint",
+          "mouthIdle": "smirk"
+        }
+      }
+    },
+    {
+      "who": "narrator",
+      "text": "You see, it's dinner at his wife's new boss's apartment,",
+      "shot": "wide drift-right",
+      "cast": {
+        "dale": {
+          "eyes": "happy",
+          "mouthIdle": "smile"
+        },
+        "margo": {
+          "eyes": "happy",
+          "mouthIdle": "smile"
+        }
+      }
+    },
+    {
+      "who": "narrator",
+      "text": "and his wife begged him: make a good impression.",
+      "shot": "close rosa push",
+      "cast": {
+        "rosa": {
+          "face": "left",
+          "eyes": "sad"
+        }
+      }
+    },
+    {
+      "who": "dale",
+      "text": "Relax. Everybody loves me.",
+      "shot": "close dale push",
+      "cast": {
+        "dale": {
+          "eyes": "happy",
+          "mouthIdle": "smirk"
+        }
+      }
+    },
+    {
+      "who": "narrator",
+      "text": "Then the boss brings out three big, juicy steaks.",
+      "shot": "medium margo push",
+      "cast": {
+        "rosa": {
+          "face": "front",
+          "eyes": "open"
+        }
+      },
+      "props": {
+        "steak1": {
+          "hidden": false
+        },
+        "steak2": {
+          "hidden": false
+        },
+        "steak3": {
+          "hidden": false
+        }
+      }
+    },
+    {
+      "who": "narrator",
+      "text": "His wife's is perfect. His is basically still mooing.",
+      "shot": "spot steak1 push"
+    },
+    {
+      "who": "margo",
+      "text": "I hope you like it rare!",
+      "shot": "close margo push"
+    },
+    {
+      "who": "dale",
+      "text": "Rare? It's my favorite!",
+      "shot": "close dale push",
+      "cast": {
+        "dale": {
+          "eyes": "shock",
+          "mouthIdle": "smile"
+        }
+      },
+      "fx": [
+        "sweat dale"
+      ]
+    },
+    {
+      "who": "narrator",
+      "text": "Then the boss pops into the kitchen for dessert.",
+      "shot": "wide drift-left",
+      "cast": {
+        "margo": {
+          "hidden": true
+        },
+        "dale": {
+          "eyes": "open",
+          "mouthIdle": "X"
+        }
+      }
+    },
+    {
+      "who": "narrator",
+      "text": "He looks at the window. Third floor. Wide open.",
+      "shot": "close dale push",
+      "cast": {
+        "dale": {
+          "eyes": "lookR"
+        }
+      },
+      "fx": [
+        {
+          "type": "idea",
+          "on": "dale",
+          "at": 1
+        }
+      ]
+    },
+    {
+      "who": "narrator",
+      "text": "Perfect.",
+      "shot": "spot window pull",
+      "fx": [
+        "sparkle 860 640"
+      ]
+    },
+    {
+      "who": "narrator",
+      "text": "He grabs his steak and throws it as hard as he can.",
+      "shot": "wide still",
+      "cast": {
+        "dale": {
+          "arms": "point",
+          "eyes": "angry"
+        }
+      },
+      "props": {
+        "steak1": {
+          "x": 820,
+          "y": 800,
+          "rot": 20,
+          "fly": {
+            "arc": 260,
+            "spin": 700,
+            "at": 1.6,
+            "dur": 0.45
+          }
+        }
+      }
+    },
+    {
+      "who": "narrator",
+      "text": "SPLAT!",
+      "say": "Splat!",
+      "shot": "spot window push",
+      "cast": {
+        "dale": {
+          "arms": "down"
+        }
+      },
+      "fx": [
+        {
+          "type": "splat",
+          "x": 820,
+          "y": 800,
+          "at": 0
+        },
+        {
+          "type": "shake",
+          "at": 0
+        }
+      ],
+      "props": {
+        "steak1": {
+          "layer": "near"
+        }
+      }
+    },
+    {
+      "who": "narrator",
+      "text": "The window wasn't open.",
+      "shot": "spot window still",
+      "props": {
+        "steak1": {
+          "y": 940,
+          "rot": 32,
+          "slide": {
+            "at": 0.15
+          }
+        },
+        "smear": {
+          "hidden": false,
+          "len": 140,
+          "slide": {
+            "at": 0.15
+          }
+        }
+      }
+    },
+    {
+      "who": "narrator",
+      "text": "It was just really, really clean.",
+      "shot": "spot window push",
+      "props": {
+        "steak1": {
+          "y": 1095,
+          "rot": 48,
+          "slide": {}
+        },
+        "smear": {
+          "len": 295,
+          "slide": {}
+        }
+      },
+      "fx": [
+        "sparkle 860 620"
+      ]
+    },
+    {
+      "who": "narrator",
+      "text": "You see, spotless glass is almost invisible. That's why birds bonk into windows.",
+      "shot": "insert birds"
+    },
+    {
+      "who": "narrator",
+      "text": "His wife slowly turns to look at him.",
+      "shot": "close rosa push",
+      "cast": {
+        "rosa": {
+          "face": "left",
+          "eyes": "shock"
+        }
+      }
+    },
+    {
+      "who": "narrator",
+      "text": "Then the boss walks back in.",
+      "shot": "wide drift-right",
+      "cast": {
+        "margo": {
+          "hidden": false,
+          "eyes": "shock",
+          "mouthIdle": "yell"
+        },
+        "rosa": {
+          "eyes": "angry"
+        }
+      },
+      "fx": [
+        "bang margo",
+        "steam rosa"
+      ]
+    },
+    {
+      "who": "dale",
+      "text": "It... slipped?",
+      "shot": "close dale push",
+      "cast": {
+        "dale": {
+          "eyes": "sad",
+          "arms": "down"
+        }
+      },
+      "fx": [
+        "sweat dale"
+      ]
+    },
+    {
+      "who": "narrator",
+      "text": "Nobody believes him.",
+      "shot": "two rosa margo push",
+      "cast": {
+        "rosa": {
+          "eyes": "half",
+          "mouthIdle": "frown"
+        },
+        "margo": {
+          "eyes": "half",
+          "mouthIdle": "frown"
+        }
+      }
+    },
+    {
+      "who": "narrator",
+      "text": "So he wipes the window, sits down, and eats every bite of that cold, raw steak.",
+      "shot": "close dale push",
+      "cast": {
+        "dale": {
+          "eyes": "closed",
+          "chew": true
+        }
+      },
+      "props": {
+        "steak1": {
+          "x": 190,
+          "y": 1300,
+          "rot": 0,
+          "layer": "front"
+        },
+        "smear": {
+          "opacity": 0.3
+        }
+      }
+    },
+    {
+      "who": "narrator",
+      "text": "The next day, his wife texts him.",
+      "shot": "insert phone",
+      "cast": {
+        "dale": {
+          "chew": false
+        }
+      }
+    },
+    {
+      "who": "rosa",
+      "text": "My boss can't stop laughing about you. Love you, steak boy.",
+      "shot": "insert phone pull"
+    },
+    {
+      "hold": 1,
+      "shot": "wide push",
+      "cast": {
+        "dale": {
+          "eyes": "happy",
+          "mouthIdle": "smile"
+        },
+        "rosa": {
+          "eyes": "happy",
+          "mouthIdle": "smile"
+        },
+        "margo": {
+          "eyes": "happy",
+          "mouthIdle": "smile",
+          "bob": true
+        }
+      }
+    }
+  ],
+  "charScale": 1.35,
+  "charGround": 1460
+}

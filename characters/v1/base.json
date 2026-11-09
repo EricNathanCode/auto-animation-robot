@@ -1,0 +1,10 @@
+{
+  "id": "base",
+  "name": "Base puppet",
+  "body": "kid",
+  "skin": "peach",
+  "hair": { "style": "none" },
+  "top": { "style": "tee", "color": "#DDE3EC" },
+  "bottom": { "style": "shorts", "color": "#9AA3AE" },
+  "shoes": { "style": "sneakers", "color": "#7B8494" }
+}

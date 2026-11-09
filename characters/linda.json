@@ -1,0 +1,16 @@
+{
+  "id": "linda",
+  "name": "Linda",
+  "role": "Sample cast · adult",
+  "goodFor": "neighbour / boss stories",
+  "version": "v1",
+  "body": "adult",
+  "skin": "light",
+  "voice": "woman",
+  "hair": { "style": "bob", "color": "#231C2B" },
+  "top": { "style": "blazer", "color": "#F06B5B", "shirt": "#FFFFFF" },
+  "bottom": { "style": "skirt", "color": "#5B6475" },
+  "shoes": { "style": "flats", "color": "#231C2B" },
+  "extras": { "pearls": { "color": "#FFF4DC" } },
+  "wardrobe": ["black bob with bangs", "coral blazer + white shirt", "pearl necklace", "grey skirt", "black flats"]
+}

@@ -1,0 +1,75 @@
+{
+  "id": "viking-helmets",
+  "genre": "history · funny",
+  "title": ["Did Vikings really", "wear HORNS?"],
+  "scene": "fjord",
+  "design": "v2",
+  "lead": 0.8,
+  "gap": 0.32,
+  "cast": {
+    "benji": { "file": "characters/benji.json", "x": 300, "face": "front", "arms": "down", "eyes": "open" },
+    "bjorn": { "file": "characters/bjorn.json", "x": 790, "face": "front", "arms": "hips", "eyes": "open" }
+  },
+  "voices": {
+    "narrator": { "model": "en_US-john-medium", "speed": 1.0 },
+    "benji": { "model": "en_GB-cori-medium", "pitch": 1.22, "speed": 1.06 },
+    "bjorn": { "model": "en_US-norman-medium", "pitch": 0.89, "speed": 0.95 }
+  },
+  "beats": [
+    {
+      "who": "narrator", "text": "Everything you know about Viking helmets is wrong.",
+      "camera": "wide"
+    },
+    {
+      "who": "benji", "text": "Bjorn, where are your cool horns?",
+      "camera": "wide",
+      "cast": {
+        "benji": { "face": "right", "eyes": "happy", "arms": "point", "hop": true },
+        "bjorn": { "face": "left", "eyes": "open", "arms": "down" }
+      }
+    },
+    {
+      "who": "bjorn", "text": "Horns? In a FIGHT? So my enemy can grab my head like a handle?",
+      "say": "Horns? In a fight?! So my enemy can grab my head, like a handle?",
+      "camera": { "zoom": 1.45, "on": "bjorn" },
+      "cast": {
+        "bjorn": { "eyes": "angry", "arms": "up", "shake": true },
+        "benji": { "eyes": "shock", "arms": "down" }
+      }
+    },
+    {
+      "who": "narrator", "text": "Real Viking helmets were simple, round, and horn-free.",
+      "camera": "wide",
+      "cast": {
+        "benji": { "face": "front", "eyes": "lookR", "arms": "down" },
+        "bjorn": { "face": "front", "eyes": "happy", "arms": "hips", "mouthIdle": "smile" }
+      }
+    },
+    {
+      "who": "benji", "text": "Wait, then who invented the horns?",
+      "camera": { "zoom": 1.45, "on": "benji" },
+      "cast": { "benji": { "eyes": "shock", "arms": "up", "hop": true } }
+    },
+    {
+      "who": "narrator", "text": "A costume designer. For an opera. In 1876.",
+      "say": "A costume designer. For an opera. In eighteen seventy six.",
+      "camera": "wide",
+      "cast": {
+        "benji": { "eyes": "lookR", "arms": "down" },
+        "bjorn": { "eyes": "half", "arms": "down", "mouthIdle": "frown" }
+      }
+    },
+    {
+      "who": "bjorn", "text": "Opera. Of course it was opera.",
+      "camera": { "zoom": 1.6, "on": "bjorn" },
+      "cast": { "bjorn": { "eyes": "half", "mouthIdle": "frown" } }
+    },
+    {
+      "hold": 1.4, "camera": "wide",
+      "cast": {
+        "benji": { "eyes": "happy", "mouthIdle": "smile" },
+        "bjorn": { "eyes": "closed", "mouthIdle": "frown" }
+      }
+    }
+  ]
+}
