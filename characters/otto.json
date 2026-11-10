@@ -1,0 +1,16 @@
+{
+  "id": "otto",
+  "name": "Otto",
+  "role": "Story cast · the birthday kid (float story)",
+  "goodFor": "What-if stories",
+  "version": "v2",
+  "body": "kid",
+  "skin": "light",
+  "voice": "boy",
+  "hair": { "style": "short", "color": "#E2B33C" },
+  "top": { "style": "tee", "color": "#5B7FB8" },
+  "bottom": { "style": "shorts", "color": "#9AA3AE" },
+  "shoes": { "style": "sneakers", "color": "#2BA59A", "sole": "#FFFFFF" },
+  "hat": { "style": "party", "color": "#E8505B", "band": "#FFD23F" },
+  "wardrobe": ["short blond hair", "blue tee", "grey shorts", "party hat on birthdays"]
+}

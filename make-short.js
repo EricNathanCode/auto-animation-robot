@@ -55,7 +55,9 @@ const S = story.charScale || BASE_S, CG = story.charGround || GROUND, K = S / BA
 console.log('🗣️  making the voices…');
 const lines = [];
 // all lines in one go (Kokoro loads its model once)
-const made = sayAll(story.beats.map((beat, i) => (beat.who ? { text: beat.say || beat.text, voice: story.voices[beat.who], outWav: path.join(OUT, 'voice', `${String(i).padStart(2, '0')}-${beat.who}.wav`) } : null)).filter(Boolean));
+// "captions": { "keys": true } → KEY WORDS in capitals show big in the captions, but the voice reads them as normal words
+const speakable = s => String(s).replace(/\b[A-Z][A-Z'’]*[A-Z]\b/g, w => w.toLowerCase());
+const made = sayAll(story.beats.map((beat, i) => (beat.who ? { text: beat.say || (CAP.keys ? speakable(beat.text) : beat.text), voice: story.voices[beat.who], outWav: path.join(OUT, 'voice', `${String(i).padStart(2, '0')}-${beat.who}.wav`) } : null)).filter(Boolean));
 let t = story.lead ?? 0.8, made_i = 0;
 story.beats.forEach((beat, i) => {
   if (!beat.who) { beat._start = t; beat._end = t + (beat.hold || 1); t = beat._end; return; }
@@ -77,10 +79,11 @@ function parseShot(beat, i) {
     if (typeof beat.shot !== 'string') return Object.assign({ move: 'push' }, beat.shot);
     const [type, ...rest] = beat.shot.trim().split(/\s+/);
     const move = rest.find(x => MOVES.includes(x)) || (type === 'wide' ? (i % 2 ? 'drift-left' : 'drift-right') : 'push');
-    const names = rest.filter(x => !MOVES.includes(x));
+    const num = rest.find(x => /^\d*\.?\d+$/.test(x)); // "spot sky 1.1": a zoom number
+    const names = rest.filter(x => !MOVES.includes(x) && x !== num);
     if (type === 'insert') return { type, card: names[0], move };
     if (type === 'two') return { type, on: names.slice(0, 2), move };
-    return { type, on: names[0], move };
+    return { type, on: names[0], move, zoom: num ? +num : undefined };
   }
   const c = beat.camera || 'wide'; // older stories: "camera": "wide" or { zoom, on }
   if (c === 'wide' || !c.on) return { type: 'wide', move: 'still' };
@@ -102,10 +105,10 @@ story.beats.forEach((beat, i) => {
   const next = {};
   for (const id of Object.keys(state)) {
     const keep = Object.assign({}, state[id]);
-    delete keep.hop; delete keep.shake;
+    delete keep.hop; delete keep.shake; delete keep.flyDur; delete keep.flyAt;
     next[id] = Object.assign(keep, (beat.cast || {})[id] || {});
   }
-  beat._cast = next; state = next;
+  beat._castFrom = state; beat._cast = next; state = next;
   beat._vs = i === 0 ? 0 : beat._start - (beat.shot ? 0.08 : 0.12); // the picture changes just before the line starts
   beat._shot = parseShot(beat, i);
   beat._fx = fxList(beat);
@@ -125,7 +128,7 @@ story.beats.forEach(beat => {
   pstate = {};
   for (const id of Object.keys(next)) { const c = Object.assign({}, next[id]); delete c.fly; delete c.slide; pstate[id] = c; }
 });
-const NUM = ['x', 'y', 'rot', 'len', 'scale', 'opacity'];
+const NUM = ['x', 'y', 'rot', 'len', 'scale', 'opacity', 'dx', 'dy'];
 function propAt(id, beat, time) {
   const a = beat._propsFrom[id], b = beat._propsTo[id], mv = b.fly || b.slide;
   if (!mv) return b;
@@ -137,15 +140,44 @@ function propAt(id, beat, time) {
   if (b.fly) { out.y -= (b.fly.arc || 0) * 4 * u * (1 - u); out.rot = (out.rot || 0) + (b.fly.spin || 0) * u; }
   return out;
 }
+// a prop held by a character ("on": "wren", dx/dy from its feet) moves with it, also when it floats
+function placeProp(p, beat, time) {
+  if (!p.on || !chars[p.on]) return p;
+  const a = airAt(p.on, beat, time);
+  return Object.assign({}, p, { x: a.x + (p.dx || 0), y: CG - a.h + a.bob + (p.dy || 0) });
+}
 function propsSvg(beat, time, layer) {
   let s = '';
   for (const id of Object.keys(beat._propsTo)) {
-    const p = propAt(id, beat, time);
-    if (!p.hidden && (p.layer || 'front') === layer) s += PR.propSvg(p);
+    const p = placeProp(propAt(id, beat, time), beat, time);
+    if (!p.hidden && (p.layer || 'front') === layer) s += PR.propSvg(p, time);
   }
   return s;
 }
 const lineAt = time => lines.find(l => time >= l.start && time < l.end);
+
+// floating (compliments!): "fly" = how high above the ground (px), blended over "flyDur" s, starting "flyAt" s
+// into the line. If x changes in a line with "flyDur", the character glides there too. Up in the air it bobs + sways.
+const flyPhase = {};
+Object.keys(chars).forEach((id, k) => { flyPhase[id] = k * 1.7; });
+function airAt(id, beat, time) {
+  const b = beat._cast[id], a = (beat._castFrom || {})[id] || b, h0 = a.fly || 0, h1 = b.fly || 0;
+  let h = h1, x = b.x;
+  if (h0 !== h1 || (b.flyDur && a.x !== b.x)) {
+    const dt = time - beat._vs - (b.flyAt || 0), u = dt <= 0 ? 0 : LK.ease(Math.min(1, dt / (b.flyDur || 0.9)));
+    h = h0 + (h1 - h0) * u;
+    if (b.flyDur && typeof a.x === 'number') x = a.x + (b.x - a.x) * u;
+  }
+  const up = Math.min(1, h / 60), ph = flyPhase[id] || 0;
+  return { h, x, bob: up * 9 * Math.sin(time * 2.4 + ph), sway: up * 3 * Math.sin(time * 1.9 + ph) };
+}
+// a string from a fence post (st.tether = [x, y]) to the waist of a floating character
+function tetherSvg(id, beat, time) {
+  const st = beat._cast[id];
+  if (!st.tether || st.hidden) return '';
+  const a = airAt(id, beat, time), r = rigOf(id), [ax, ay] = st.tether, hx = a.x, hy = CG - a.h + a.bob + S * (r.B - 6);
+  return `<path d="M ${ax},${ay} Q ${f1((ax + hx) / 2 + 14)},${f1((ay + hy) / 2 + 26)} ${f1(hx)},${f1(hy)}" fill="none" stroke="#5B4A44" stroke-width="3"/>`;
+}
 
 // ---------- 2) what each frame looks like ----------
 const rigOf = id => P.rig(chars[id].body);
@@ -156,13 +188,15 @@ function cameraAt(beat, time) {
   const sh = beat._shot, st = id => beat._cast[id];
   const u = LK.ease((time - beat._vs) / Math.max(0.1, beat._ve - beat._vs));
   let z = 1, fx = W / 2, fy = H / 2;
-  if (sh.type === 'medium' && chars[sh.on]) { z = 1.45 * ZK; fx = st(sh.on).x; fy = headY(sh.on, st(sh.on)) + 190 * K; }
-  else if (sh.type === 'close' && chars[sh.on]) { z = 1.8 * ZK; fx = st(sh.on).x; fy = headY(sh.on, st(sh.on)) + 60 * K; }
-  else if (sh.type === 'two' && sh.on.every(id => chars[id])) { z = 1.12; fx = (st(sh.on[0]).x + st(sh.on[1]).x) / 2; fy = CG - 380 * K; }
+  const air = id => airAt(id, beat, time); // the camera follows a floating character up (but not its little bob)
+  if (sh.type === 'medium' && chars[sh.on]) { const a = air(sh.on); z = 1.45 * ZK; fx = a.x; fy = headY(sh.on, st(sh.on)) - a.h + 190 * K; }
+  else if (sh.type === 'close' && chars[sh.on]) { const a = air(sh.on); z = 1.8 * ZK; fx = a.x; fy = headY(sh.on, st(sh.on)) - a.h + 60 * K; }
+  else if (sh.type === 'feet' && chars[sh.on]) { const a = airAt(sh.on, beat, beat._vs); z = 2.6 * ZK; fx = a.x; fy = CG - a.h - 20 * K; } // stays put: the feet lift off
+  else if (sh.type === 'two' && sh.on.every(id => chars[id])) { const a = air(sh.on[0]), b = air(sh.on[1]); z = 1.12; fx = (a.x + b.x) / 2; fy = CG - 380 * K - (a.h + b.h) / 2; }
   else if (sh.type === 'custom') { z = sh.zoom; fx = st(sh.on).x; fy = CG + S * rigOf(sh.on).cy - 80 * K; }
   else if (sh.type === 'spot') { // a close look at a prop (where it is when the line starts) or a place in the scene
-    const p = beat._propsTo[sh.on] ? propAt(sh.on, beat, beat._vs) : null, spot = p ? [p.x, p.y] : (LYR.spots || {})[sh.on] || [W / 2, H / 2];
-    z = sh.zoom || (p ? 2.3 : 1.7); fx = spot[0]; fy = spot[1];
+    const p = beat._propsTo[sh.on] ? placeProp(propAt(sh.on, beat, beat._vs), beat, beat._vs) : null, spot = p ? [p.x, p.y] : (LYR.spots || {})[sh.on] || [W / 2, H / 2];
+    z = sh.zoom || spot[2] || (p ? 2.3 : 1.7); fx = spot[0]; fy = spot[1];
   }
   else if (sh.move !== 'still') { z = 1.06; fy = CG - 420 * K; } // wide: room to drift, faces above the captions
   // the camera never stops (Style Bible): a slow push, pull or drift over the whole shot
@@ -171,7 +205,7 @@ function cameraAt(beat, time) {
   else if (sh.move === 'drift-left') fx += 30 * (1 - 2 * u);
   else if (sh.move === 'drift-right') fx -= 30 * (1 - 2 * u);
   const hw = W / 2 / z, hh = H / 2 / z;
-  fx = Math.min(W - hw, Math.max(hw, fx)); fy = Math.min(H - hh, Math.max(hh, fy));
+  fx = Math.min(W - hw, Math.max(hw, fx)); fy = Math.min(H - hh, Math.max(hh + (LYR.top || 0), fy)); // a scene can go up into the sky
   return { z, fx, fy };
 }
 // a background layer at depth k (0 = far away, doesn't move; 1 = where the characters stand)
@@ -209,6 +243,10 @@ function fxFor(id, beat, time) {
     else if (f.type === 'bang') s += LK.bang(dt, head);
     else if (f.type === 'idea') s += LK.idea(dt, head);
     else if (f.type === 'dust') s += LK.dust(dt, 0, 90);
+    else if (f.type === 'whoosh' && dt < 0.8) { // speed lines under someone shooting up
+      const o = ((1 - dt / 0.8) * 0.85).toFixed(2);
+      for (const [x, l] of [[-54, 130], [-20, 190], [16, 160], [50, 120]]) s += `<path d="M ${x},${f1(30 + dt * 90)} L ${x},${f1(30 + l + dt * 90)}" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" opacity="${o}"/>`;
+    }
     else if (f.type === 'sparkle') {
       const spot = f.spot === 'chest' ? [26, (r.T + r.B) / 2 + sitDy(id, st)] : f.spot === 'head' ? [56, head.y - 70] : [-46, head.y - 118];
       s += LK.sparkle(dt, spot[0], spot[1], 1.3);
@@ -225,13 +263,15 @@ function charSvg(id, beat, time) {
   const eyes = eyesAt(id, time, st.eyes || 'open');
   const brows = ((P.EYES || {})[st.eyes || 'open'] || {}).brow; // v2: the eyebrows keep the mood while the eyes blink
   const pose = { arms: st.arms || 'down', pointDir: st.pointDir || (st.x < W / 2 ? 1 : -1), headRot: speaking ? 1.8 * Math.sin(time * 7) : 0, legs: st.legs };
-  let x = st.x, y = 0;
+  const air = airAt(id, beat, time);
+  let x = air.x, y = 0;
   const dt = time - beat._vs;
   if (st.hop && dt >= 0 && dt < 0.36) y = -38 * Math.sin(Math.PI * dt / 0.36);
   if (st.shake && speaking) x += Math.floor(time * 12) % 2 ? 3.5 : -3.5;
   if (st.bob) y -= Math.abs(Math.sin(time * 14)) * 7; // laughing
   const ch = st.hat !== undefined ? Object.assign({}, chars[id], { hat: st.hat }) : chars[id];
-  return `<g transform="translate(${f1(x)},${f1(CG + y * K)}) scale(${S})"${MOOD ? '' : ' filter="url(#drop)"'}>` +
+  const r = rigOf(id), sway = air.sway ? ` rotate(${air.sway.toFixed(2)} 0 ${f1(S * (r.T + r.B) / 2)})` : '';
+  return `<g transform="translate(${f1(x)},${f1(CG + y * K - air.h + air.bob)})${sway} scale(${S})"${MOOD ? '' : ' filter="url(#drop)"'}>` +
     P.drawCharacter(ch, st.face || 'front', { eyes, mouth, brows }, pose) + fxFor(id, beat, time) + '</g>';
 }
 function sceneFx(beat, time) { // effects at a place in the scene (not on a character)
@@ -242,6 +282,7 @@ function sceneFx(beat, time) { // effects at a place in the scene (not on a char
     if (dt < 0) continue;
     if (f.type === 'splat') s += LK.splat(dt, f.x, f.y);
     else if (f.type === 'sparkle') s += LK.sparkle(dt, f.x, f.y, 1.4);
+    else if (f.type === 'bang') s += LK.bang(dt, { x: f.x, y: f.y, r: 0 });
   }
   return s;
 }
@@ -273,7 +314,7 @@ function sceneSvg(beat, time) {
     return svg(`${DEFS}<g transform="${tr}">${BG_FLAT}${Object.keys(chars).map(id => charSvg(id, beat, time)).join('')}</g>` + screenFx(beat, time, 'flash'));
   }
   // depth: far + middle layers slide less and blur in close-ups
-  const blur = sh.type === 'close' ? 7 : sh.type === 'medium' || sh.type === 'custom' ? 4 : 0;
+  const blur = sh.type === 'close' || sh.type === 'feet' ? 7 : sh.type === 'medium' || sh.type === 'custom' ? 4 : 0;
   const wrap = (body, px) => { const id = LK.blurId(px); return id ? `<g filter="url(#${id})">${body}</g>` : body; };
   const lampInside = LYR.light.layer === 'near';
   let s = DEFS;
@@ -281,7 +322,11 @@ function sceneSvg(beat, time) {
   if (LYR.mid) s += `<g transform="${layerTf(cam, 0.65, sx * 0.65, sy * 0.65)}">${wrap(LYR.mid, blur / 2)}</g>`;
   s += `<g transform="${layerTf(cam, 1, sx, sy)}">${LYR.near}${LK.groundTint(MOOD, LYR.shoreY)}${lampInside ? LK.lightGlow(MOOD, LYR.light.x, LYR.light.y) : ''}`;
   s += propsSvg(beat, time, 'near');
-  if (!LYR.front) for (const id of Object.keys(chars)) if (!beat._cast[id].hidden) s += LK.groundShadow(beat._cast[id].x, CG - 4, S * (P.rig(chars[id].body).wb || 90) + 22);
+  if (!LYR.front) for (const id of Object.keys(chars)) if (!beat._cast[id].hidden) { // the shadow shrinks when someone floats up
+    const a = airAt(id, beat, time), k = 1 / (1 + a.h / 350);
+    s += LK.groundShadow(a.x, CG - 4, (S * (P.rig(chars[id].body).wb || 90) + 22) * k, 18 * k);
+  }
+  s += Object.keys(chars).map(id => tetherSvg(id, beat, time)).join('');
   s += Object.keys(chars).map(id => charSvg(id, beat, time)).join('');
   s += (LYR.front || '') + propsSvg(beat, time, 'front') + sceneFx(beat, time) + '</g>';
   return svg(s + LK.overlay(MOOD) + screenFx(beat, time, 'flash'), GRADE);
@@ -301,6 +346,8 @@ function titleSvg(time) {
     `<text x="0" y="80" text-anchor="middle" font-size="96" font-weight="700" word-spacing="8" fill="#D9443B">${esc(b)}</text></g>`;
 }
 
+const isKey = w => /[A-Z]{2}/.test(w.word) && w.word === w.word.toUpperCase();
+const KEYS = !!CAP.keys; // opt-in, so older stories keep their captions
 function captionSvg(time) {
   const line = lines.find(l => time >= l.start && time < l.end + 0.2);
   if (!line) return '';
@@ -310,10 +357,11 @@ function captionSvg(time) {
   const chunk = line.chunks[ci];
   let active = chunk[0];
   for (const w of chunk) if (rel >= w.start) active = w;
-  const len = chunk.reduce((s, w) => s + w.word.length + 1, -1);
+  const len = chunk.reduce((s, w) => s + w.word.length * (KEYS && isKey(w) ? 1.12 : 1) + 1, -1);
   const size = Math.min(CAP.size, Math.floor(980 / (len * 0.56)));
   const pop = LK.ease((rel - (chunk[0].start - 0.05)) / 0.08), sc = 0.86 + 0.14 * pop; // each chunk pops in
-  const spans = chunk.map(w => `<tspan fill="${w === active ? '#FFD23F' : '#FFFFFF'}">${esc(w.word)}</tspan>`).join(' ');
+  // "keys": true → KEY WORDS in capitals are yellow + bigger; otherwise the word being said is yellow
+  const spans = chunk.map(w => `<tspan fill="${(KEYS ? isKey(w) : w === active) ? '#FFD23F' : '#FFFFFF'}"${KEYS && isKey(w) ? ` font-size="${Math.round(size * 1.12)}"` : ''}>${esc(w.word)}</tspan>`).join(' ');
   // word-spacing: the thick outline would otherwise fill the gap between two white words
   return `<g transform="translate(540,${CAP.y}) scale(${sc.toFixed(3)})"><text x="0" y="0" text-anchor="middle" font-size="${size}" font-weight="700" word-spacing="${Math.round(size * 0.22)}" stroke="${INK}" stroke-width="${Math.round(size * 0.2)}" stroke-linejoin="round" paint-order="stroke">${spans}</text></g>`;
 }

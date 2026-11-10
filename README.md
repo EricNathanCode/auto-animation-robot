@@ -74,6 +74,15 @@ who speaks, the words, what everyone does and how the camera sees it. Example wi
 | `"shot": "spot window"` / `"spot steak1"` | a close look at a place in the scene or at a prop |
 | more `"fx"`: `"idea dale"`, `"splat 820 800"`, `"sparkle 860 620"` | a light bulb over a head, red drops flying out, a sparkle anywhere |
 | cards: `"kind": "phone"` with `"bubbles"`, art `{ "style": "bird" }` | a text message on a phone; a dizzy paper bird |
+| `"scene": "town"` | a small town street at any mood: a house, a picket fence, a mailbox and a tall "UPTON" water tower. The sky goes 700 px above the picture, so the camera can follow someone who floats |
+| in `"cast"`: `"fly": 470`, `"flyDur": 0.6`, `"flyAt": 1.2` | float this many px above the ground, rising (or sinking) smoothly over `flyDur` s, starting `flyAt` s into the line. Up in the air a character bobs + sways and its shadow shrinks; `medium`, `close` and `two` shots follow it up. If `x` changes in the same line, it glides there too (`"flyDur": 0.01` = jump) |
+| in `"cast"`: `"tether": [151, 1270]` | a string from that point (a fence post) to the waist of a floating character |
+| `"props"`: `balloon` (`len`, `color`, `seed`), `kitten` (`face`: 1 or -1), `ladder` (`len`) | balloons on strings that sway, a small orange kitten whose tail swishes, a firefighter's ladder |
+| a prop held by someone: `{ "on": "wren", "dx": 36, "dy": -75 }` | the prop follows that character (also when it floats); `dx`/`dy` from its feet can `slide` too |
+| `"shot": "feet juno"`, `"spot sky 1.1"` | a close look at someone's feet (the camera stays put, so you see them lift off); a number after a spot = its zoom |
+| KEY WORDS in capitals: `"captions": { "keys": true }` + `"text": "Over the ROOF!"` | the capital words show bigger + yellow in the captions; the voice still reads them as normal words (off by default, so older stories do not change) |
+| more `"fx"`: `"whoosh wren"`, `"bang 762 200"` | speed lines under someone shooting up; a "!" anywhere in the scene |
+| new looks: hair `spiky` / `puffs`, hats `party` / `fire`, `"top": { "stripes": "#F2C14E" }` | hair that sticks straight up, two round hair puffs, a party hat, a fire helmet, reflective bands on a coat |
 
 Older stories (with `"camera"` instead of `"shot"`, no `"mood"`) still work the old way.
 Test one moment: `node make-short.js stories/steak-window.json --check --at=30.7,31.2` (pictures at those seconds).
@@ -88,11 +97,12 @@ Test one moment: `node make-short.js stories/steak-window.json --check --at=30.7
 | `characters/*.json` | one file per character: only its wardrobe |
 | `make-sheets.js` | makes the v1 PNGs |
 | `make-short.js` | makes a short from a story script |
-| `src/scenes.js` | the backgrounds (fjord, dining room), split into depth layers (far, middle, near, front) |
+| `src/scenes.js` | the backgrounds (fjord, dining room, town), split into depth layers (far, middle, near, front) |
 | `src/look.js` | the Style Bible look: moods, glow, rays, contrast, vignette, ground shadows, the effects kit |
-| `src/props.js` | the insert cards (paper close-ups of objects, a phone) + scene props (steak, plate, smear) |
+| `src/props.js` | the insert cards (paper close-ups of objects, a phone) + scene props (steak, plate, smear, balloon, kitten, ladder) |
 | `characters/dale.json`, `rosa.json`, `margo.json` | the steak story's cast (husband, wife, boss) |
-| `src/voices.js` | Piper voices + pitch, the voice track |
+| `characters/wren.json`, `juno.json`, `otto.json`, `chief.json` | the float story's cast (the narrator, her best friend, the birthday kid, the fire chief) |
+| `src/voices.js` | Kokoro + Piper voices, pitch, the voice track at exactly -14 LUFS (compressor + limiter, then a measured loudnorm) |
 | `src/lipsync.js` | mouth shapes + word timings from the words and loudness |
 | `src/renderer.js` | the frame camera (hidden Edge / Chromium) |
 | `stories/*.json` | the story scripts |

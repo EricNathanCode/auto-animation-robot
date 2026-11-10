@@ -1,0 +1,704 @@
+{
+ "id": "float-town",
+ "upload_title": "In My Town, Compliments Make You FLOAT",
+ "source": "Our own idea (What-if story shape #2 from the Style Bible). No lines, names or ideas copied from other channels.",
+ "genre": "What if · funny + heartfelt",
+ "shape": "Story shape #2: the rule, the world, me + my friend + 3 details, the problem, the idea, three tries, the big one, the twist, the callback",
+ "scene": "town",
+ "mood": "sunset",
+ "design": "v2",
+ "fps": 30,
+ "lead": 0,
+ "gap": 0.12,
+ "tail": 0.7,
+ "charScale": 1.5,
+ "charGround": 1540,
+ "captions": {
+  "words": 2,
+  "chars": 12,
+  "y": 1400,
+  "size": 100,
+  "keys": true
+ },
+ "cast": {
+  "wren": {
+   "file": "characters/wren.json",
+   "x": 300,
+   "face": "right",
+   "eyes": "open",
+   "hidden": true
+  },
+  "juno": {
+   "file": "characters/juno.json",
+   "x": 620,
+   "face": "left",
+   "eyes": "happy",
+   "mouthIdle": "smile"
+  },
+  "otto": {
+   "file": "characters/otto.json",
+   "x": 250,
+   "face": "front",
+   "eyes": "happy",
+   "hat": null,
+   "mouthIdle": "smile"
+  },
+  "chief": {
+   "file": "characters/chief.json",
+   "x": 925,
+   "face": "left",
+   "eyes": "open",
+   "hidden": true
+  }
+ },
+ "voices": {
+  "narrator": {
+   "engine": "kokoro",
+   "voice": "af_heart",
+   "speed": 1.1,
+   "pitch": 1.05
+  },
+  "wren": {
+   "engine": "kokoro",
+   "voice": "af_heart",
+   "speed": 1.1,
+   "pitch": 1.05
+  },
+  "juno": {
+   "engine": "kokoro",
+   "voice": "af_bella",
+   "speed": 1.05,
+   "pitch": 1.08
+  }
+ },
+ "props": {
+  "b1": {
+   "kind": "balloon",
+   "x": 151,
+   "y": 1270,
+   "len": 210,
+   "color": "#E8505B",
+   "seed": 0,
+   "rot": -14,
+   "layer": "near",
+   "hidden": true
+  },
+  "b2": {
+   "kind": "balloon",
+   "x": 151,
+   "y": 1270,
+   "len": 290,
+   "color": "#3E9BD8",
+   "seed": 1.3,
+   "rot": -2,
+   "layer": "near",
+   "hidden": true
+  },
+  "b3": {
+   "kind": "balloon",
+   "x": 151,
+   "y": 1270,
+   "len": 240,
+   "color": "#FFD23F",
+   "seed": 2.6,
+   "rot": -26,
+   "layer": "near",
+   "hidden": true
+  },
+  "kitten": {
+   "kind": "kitten",
+   "x": 745,
+   "y": 292,
+   "scale": 0.9,
+   "face": 1,
+   "layer": "near",
+   "hidden": true
+  },
+  "fireladder": {
+   "kind": "ladder",
+   "x": 905,
+   "y": 1490,
+   "len": 620,
+   "rot": -5,
+   "layer": "near",
+   "hidden": true
+  }
+ },
+ "cards": {
+  "bricks": {
+   "kind": "sign",
+   "title": [
+    "BACKPACK",
+    "BRICKS"
+   ],
+   "art": {
+    "style": "brick"
+   },
+   "artY": 60,
+   "artScale": 1.6,
+   "lines": [
+    "2 for $1",
+    "Stay on the ground!"
+   ]
+  },
+  "duck": {
+   "kind": "poster",
+   "paper": "#2C3566",
+   "ink": "#FFF4DE",
+   "accent": "#FFD23F",
+   "title": [
+    "NIGHT-NIGHT",
+    "DUCKY"
+   ],
+   "art": {
+    "style": "duck"
+   },
+   "artY": 20,
+   "artScale": 1.7,
+   "lines": [
+    "AGES 2-4"
+   ]
+  }
+ },
+ "beats": [
+  {
+   "who": "narrator",
+   "text": "In my town, compliments make you FLOAT.",
+   "shot": "wide",
+   "cast": {
+    "juno": {
+     "fly": 90,
+     "flyAt": 1,
+     "flyDur": 0.9
+    }
+   },
+   "fx": [
+    {
+     "type": "sparkle",
+     "on": "juno",
+     "spot": "chest",
+     "at": 1.6
+    }
+   ]
+  },
+  {
+   "who": "narrator",
+   "text": "Nice shoes? You go up an INCH.",
+   "shot": "feet juno",
+   "cast": {
+    "juno": {
+     "fly": 125,
+     "flyAt": 0.75,
+     "flyDur": 0.45
+    }
+   }
+  },
+  {
+   "who": "narrator",
+   "text": "You're a GENIUS? Over the ROOF!",
+   "shot": "wide still",
+   "cast": {
+    "otto": {
+     "fly": 1000,
+     "flyAt": 0.7,
+     "flyDur": 0.55,
+     "eyes": "shock"
+    },
+    "juno": {
+     "fly": 0,
+     "flyDur": 0.6
+    }
+   },
+   "fx": [
+    {
+     "type": "whoosh",
+     "on": "otto",
+     "at": 0.7
+    }
+   ]
+  },
+  {
+   "who": "narrator",
+   "text": "Birthday kids get tied to the fence like BALLOONS.",
+   "shot": "spot fence",
+   "cast": {
+    "otto": {
+     "x": 340,
+     "fly": 380,
+     "flyDur": 0.01,
+     "tether": [
+      151,
+      1270
+     ],
+     "hat": {
+      "style": "party",
+      "color": "#E8505B",
+      "band": "#FFD23F"
+     },
+     "eyes": "happy",
+     "arms": "wave"
+    }
+   },
+   "props": {
+    "b1": {
+     "hidden": false
+    },
+    "b2": {
+     "hidden": false
+    },
+    "b3": {
+     "hidden": false
+    }
+   }
+  },
+  {
+   "who": "narrator",
+   "text": "And everyone carries a BRICK. Just in case.",
+   "shot": "insert bricks"
+  },
+  {
+   "who": "narrator",
+   "text": "Me? I've NEVER floated.",
+   "shot": "medium wren",
+   "cast": {
+    "wren": {
+     "hidden": false,
+     "face": "front",
+     "eyes": "sad"
+    },
+    "otto": {
+     "hidden": true
+    },
+    "juno": {
+     "mouthIdle": "X"
+    }
+   }
+  },
+  {
+   "who": "narrator",
+   "text": "I SNORT when I laugh,",
+   "shot": "close wren",
+   "cast": {
+    "wren": {
+     "eyes": "happy",
+     "bob": true
+    }
+   },
+   "fx": [
+    "bang wren"
+   ]
+  },
+  {
+   "who": "narrator",
+   "text": "my hair sticks straight UP,",
+   "shot": "close wren pull",
+   "cast": {
+    "wren": {
+     "eyes": "lookU",
+     "bob": false
+    }
+   },
+   "fx": [
+    {
+     "type": "sparkle",
+     "on": "wren",
+     "at": 0.4
+    }
+   ]
+  },
+  {
+   "who": "narrator",
+   "text": "and I sleep with a DUCK night light.",
+   "shot": "insert duck"
+  },
+  {
+   "who": "narrator",
+   "text": "My best friend Juno? She floats every DAY.",
+   "shot": "two wren juno",
+   "cast": {
+    "wren": {
+     "face": "right",
+     "eyes": "open"
+    },
+    "juno": {
+     "face": "left",
+     "fly": 70,
+     "flyDur": 0.8,
+     "eyes": "happy"
+    }
+   }
+  },
+  {
+   "who": "narrator",
+   "text": "Then her kitten climbs the water TOWER.",
+   "shot": "spot kitten 2.1",
+   "cast": {
+    "juno": {
+     "fly": 0,
+     "flyDur": 0.01,
+     "eyes": "shock"
+    }
+   },
+   "props": {
+    "kitten": {
+     "hidden": false
+    }
+   },
+   "fx": [
+    {
+     "type": "bang",
+     "x": 762,
+     "y": 200,
+     "at": 0.6
+    }
+   ]
+  },
+  {
+   "who": "narrator",
+   "text": "The fire ladder's way too SHORT.",
+   "shot": "spot ladder",
+   "cast": {
+    "chief": {
+     "hidden": false,
+     "eyes": "sad"
+    }
+   },
+   "props": {
+    "fireladder": {
+     "hidden": false
+    }
+   },
+   "fx": [
+    {
+     "type": "sweat",
+     "on": "chief",
+     "at": 0.4
+    }
+   ]
+  },
+  {
+   "who": "narrator",
+   "text": "Grown-ups can't float. Too many WORRIES.",
+   "shot": "medium chief",
+   "cast": {
+    "chief": {
+     "eyes": "sad"
+    }
+   },
+   "fx": [
+    "sweat chief"
+   ]
+  },
+  {
+   "who": "juno",
+   "text": "I'll say nice things about you!",
+   "shot": "close juno",
+   "cast": {
+    "juno": {
+     "eyes": "open",
+     "face": "left"
+    }
+   },
+   "fx": [
+    "idea juno"
+   ]
+  },
+  {
+   "who": "wren",
+   "text": "Good luck.",
+   "shot": "close wren",
+   "cast": {
+    "wren": {
+     "eyes": "half",
+     "face": "right"
+    }
+   }
+  },
+  {
+   "who": "juno",
+   "text": "Your snort... scares away PIGEONS!",
+   "shot": "two wren juno",
+   "cast": {
+    "juno": {
+     "eyes": "happy"
+    },
+    "wren": {
+     "eyes": "shock"
+    }
+   }
+  },
+  {
+   "who": "narrator",
+   "text": "MAILBOX high.",
+   "shot": "spot mailbox 1.3",
+   "cast": {
+    "wren": {
+     "fly": 334,
+     "flyDur": 0.6,
+     "eyes": "open"
+    }
+   },
+   "fx": [
+    {
+     "type": "sparkle",
+     "on": "wren",
+     "spot": "chest"
+    }
+   ]
+  },
+  {
+   "who": "juno",
+   "text": "Your hair points right at the SKY!",
+   "shot": "close juno",
+   "cast": {
+    "juno": {
+     "eyes": "lookU"
+    }
+   }
+  },
+  {
+   "who": "narrator",
+   "text": "WINDOW high.",
+   "shot": "spot window",
+   "cast": {
+    "wren": {
+     "x": 380,
+     "fly": 470,
+     "flyDur": 0.5,
+     "eyes": "happy"
+    }
+   },
+   "fx": [
+    {
+     "type": "sparkle",
+     "on": "wren",
+     "spot": "chest"
+    }
+   ]
+  },
+  {
+   "who": "juno",
+   "text": "Your duck light is... very YELLOW!",
+   "shot": "close juno",
+   "cast": {
+    "juno": {
+     "eyes": "squint"
+    }
+   },
+   "fx": [
+    {
+     "type": "sweat",
+     "on": "juno",
+     "at": 0.3
+    }
+   ]
+  },
+  {
+   "who": "narrator",
+   "text": "ROOF high. Not ENOUGH.",
+   "shot": "wide",
+   "cast": {
+    "wren": {
+     "fly": 660,
+     "flyDur": 0.8,
+     "eyes": "sad"
+    }
+   }
+  },
+  {
+   "who": "narrator",
+   "text": "Juno takes a deep breath.",
+   "shot": "close juno",
+   "cast": {
+    "juno": {
+     "eyes": "closed"
+    }
+   }
+  },
+  {
+   "who": "juno",
+   "text": "When I was the new kid, you were the only one who sat with me.",
+   "shot": "close juno push",
+   "cast": {
+    "juno": {
+     "eyes": "lookU"
+    }
+   },
+   "fx": [
+    {
+     "type": "sparkle",
+     "on": "juno",
+     "spot": "chest",
+     "at": 3
+    }
+   ]
+  },
+  {
+   "who": "narrator",
+   "text": "And I BELIEVE her.",
+   "shot": "close wren",
+   "cast": {
+    "wren": {
+     "eyes": "happy",
+     "face": "front",
+     "mouthIdle": "smile"
+    }
+   },
+   "fx": [
+    {
+     "type": "sparkle",
+     "on": "wren",
+     "spot": "chest",
+     "at": 0.5
+    }
+   ]
+  },
+  {
+   "who": "narrator",
+   "text": "I SHOOT up and grab the kitten!",
+   "shot": "spot tower 1.25",
+   "cast": {
+    "wren": {
+     "x": 690,
+     "fly": 1098,
+     "flyAt": 0.25,
+     "flyDur": 0.55,
+     "eyes": "shock"
+    }
+   },
+   "fx": [
+    {
+     "type": "whoosh",
+     "on": "wren",
+     "at": 0.25
+    },
+    {
+     "type": "sparkle",
+     "on": "wren",
+     "spot": "head",
+     "at": 0.9
+    }
+   ]
+  },
+  {
+   "who": "narrator",
+   "text": "Now I'm STUCK. So I yell the truest thing I know.",
+   "shot": "medium wren",
+   "cast": {
+    "wren": {
+     "eyes": "sad"
+    }
+   },
+   "props": {
+    "kitten": {
+     "on": "wren",
+     "dx": 36,
+     "dy": -75,
+     "layer": "front"
+    }
+   },
+   "fx": [
+    {
+     "type": "sweat",
+     "on": "wren",
+     "at": 0.3
+    }
+   ]
+  },
+  {
+   "who": "wren",
+   "text": "You're my BEST FRIEND!",
+   "shot": "close wren push",
+   "cast": {
+    "wren": {
+     "eyes": "happy"
+    }
+   }
+  },
+  {
+   "who": "narrator",
+   "text": "Up she floats, right next to me.",
+   "shot": "spot sky 1.1",
+   "cast": {
+    "juno": {
+     "x": 370,
+     "fly": 1000,
+     "flyAt": 0.05,
+     "flyDur": 1.4,
+     "eyes": "happy",
+     "face": "right"
+    }
+   },
+   "fx": [
+    {
+     "type": "whoosh",
+     "on": "juno",
+     "at": 0.05
+    },
+    {
+     "type": "sparkle",
+     "on": "juno",
+     "spot": "chest",
+     "at": 1.2
+    }
+   ]
+  },
+  {
+   "who": "narrator",
+   "text": "We named the kitten BRICK.",
+   "shot": "two wren juno pull",
+   "cast": {
+    "wren": {
+     "face": "left",
+     "eyes": "happy",
+     "mouthIdle": "smile"
+    },
+    "juno": {
+     "mouthIdle": "smile"
+    }
+   }
+  },
+  {
+   "who": "narrator",
+   "text": "Nobody's allowed to call it CUTE.",
+   "shot": "two wren juno push",
+   "cast": {
+    "wren": {
+     "eyes": "open"
+    }
+   }
+  },
+  {
+   "who": "juno",
+   "text": "Aww. So CUTE.",
+   "shot": "two wren juno",
+   "cast": {
+    "juno": {
+     "eyes": "happy"
+    },
+    "wren": {
+     "eyes": "shock",
+     "mouthIdle": "X"
+    }
+   },
+   "props": {
+    "kitten": {
+     "dx": 150,
+     "dy": -330,
+     "slide": {
+      "at": 0.7,
+      "dur": 0.9
+     }
+    }
+   },
+   "fx": [
+    {
+     "type": "sparkle",
+     "on": "wren",
+     "spot": "head",
+     "at": 0.8
+    }
+   ]
+  }
+ ]
+}

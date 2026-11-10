@@ -137,7 +137,74 @@ function diningLayers() {
   return { far, mid: '', near, front, light: { x: 430, y: 410, kind: 'lamp', layer: 'near' }, shoreY: 1286, spots: { window: [750, 830] } };
 }
 
-const SCENES = { fjord, dining: () => { const L = diningLayers(); return L.far + L.near + L.front; } };
-const LAYERS = { fjord: fjordLayers, dining: diningLayers };
+// a small town street: a house with a fence, a mailbox and a tall water tower. "top" lets the camera go up into
+// the sky above the picture (for characters who float), so the sky, clouds and the tower's top go up to y = -700.
+function townLayers() {
+  const K = kit('v2');
+  // far: sky, clouds, the sun, two rows of hills
+  let far = `<defs><linearGradient id="tnSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8CC8EE"/><stop offset="0.55" stop-color="#C4E6F6"/><stop offset="1" stop-color="#F6F0D8"/></linearGradient></defs>`;
+  far += `<rect x="-400" y="-1600" width="${W + 800}" height="${H + 2000}" fill="url(#tnSky)"/>`;
+  far += K.piece(circle(600, 900, 64), '#FFF1C4');
+  for (const [x, y, s] of [[170, 300, 1.1], [860, 140, 0.9], [420, -240, 1.2], [930, -430, 1], [140, -560, 0.85], [720, 560, 0.7], [300, -900, 1]]) far += cloud(K, x, y, s);
+  far += K.piece([ellipse(140, 1130, 380, 140), ellipse(700, 1100, 420, 160), ellipse(1160, 1140, 360, 130), rect(-400, 1120, W + 800, 900)], '#A9C9A2');
+  far += K.piece([ellipse(-60, 1210, 360, 120), ellipse(520, 1195, 420, 130), ellipse(1060, 1220, 380, 120), rect(-400, 1200, W + 800, 900)], '#93BF83');
+  // mid: a row of little houses and trees far down the street
+  let mid = K.piece(rect(-500, 1300, W + 1000, 1200), '#8FBF78');
+  const homes = [[-220, 150, '#D8A47F', '#8E5E4A'], [-40, 120, '#C9B49A', '#6E7E96'], [130, 170, '#A9B8C9', '#7B5B6E'], [330, 130, '#E2C28E', '#8E5E4A'],
+    [520, 160, '#C9A3A0', '#5E6E86'], [720, 125, '#B9C9A8', '#8E5E4A'], [900, 165, '#D8B48F', '#6E7E96'], [1090, 135, '#A9B8C9', '#7B5B6E']];
+  homes.forEach(([x, h, wall, roof], i) => {
+    mid += K.piece(rect(x, 1310 - h, 140, h), wall) + K.piece(polygon([[x - 14, 1312 - h], [x + 70, 1250 - h], [x + 154, 1312 - h]]), roof);
+    mid += `<rect x="${x + 28}" y="${1340 - h}" width="26" height="30" fill="#FFF4D0" opacity="0.8"/><rect x="${x + 86}" y="${1340 - h}" width="26" height="30" fill="#FFF4D0" opacity="0.8"/>`;
+    if (i % 2) mid += K.piece([circle(x + 160, 1236, 40), circle(x + 186, 1262, 34), rect(x + 156, 1260, 10, 52)], '#6FA35A');
+  });
+  // near: lawn, the house, bushes, the fence, the mailbox, the water tower, the sidewalk and the street
+  let near = K.piece(rect(-400, 1380, W + 800, 140), '#8CC56B');
+  for (let x = -380; x < W + 400; x += 120) near += `<rect x="${x}" y="1380" width="60" height="140" fill="#9ACF78" opacity="0.5"/>`;
+  near += K.piece([rect(420, 640, 60, 170), rect(410, 628, 80, 20, 4)], '#A8533F'); // chimney (behind the roof)
+  near += K.piece(rect(20, 880, 540, 500), '#F2D7A6');
+  for (let y = 908; y < 1380; y += 28) near += line(`M 22,${y} L 558,${y}`, 2, '#E3C48E');
+  near += K.piece(polygon([[-24, 892], [290, 586], [604, 892]]), '#B9534A');
+  for (let y = 650; y < 890; y += 44) { const dx = (y - 586) * (314 / 306); near += line(`M ${Math.round(290 - dx + 12)},${y} L ${Math.round(290 + dx - 12)},${y}`, 3, '#A3463F'); }
+  near += K.piece(rect(-28, 880, 636, 18, 6), '#8E3B35');
+  near += K.piece(circle(290, 790, 40), '#FFFFFF') + `<circle cx="290" cy="790" r="28" fill="#A9D6F0"/>` + line('M 262,790 L 318,790 M 290,762 L 290,818', 4, '#FFFFFF');
+  const win = (x, y, w, h) => K.piece(rect(x - 30, y + 6, 26, h - 12, 3), '#5B7FB8') + K.piece(rect(x + w + 4, y + 6, 26, h - 12, 3), '#5B7FB8') +
+    K.piece(rect(x - 8, y - 8, w + 16, h + 16, 4), '#FFFFFF') + `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#A9D6F0"/>` +
+    `<polygon points="${x + 14},${y} ${x + 50},${y} ${x},${y + 56} ${x},${y + 22}" fill="#FFFFFF" opacity="0.35"/>` + line(`M ${x + w / 2},${y} L ${x + w / 2},${y + h} M ${x},${y + h / 2} L ${x + w},${y + h / 2}`, 6, '#FFFFFF');
+  near += win(100, 950, 120, 120) + win(360, 950, 120, 120) + win(100, 1180, 120, 120);
+  near += K.piece(rect(352, 1140, 116, 240, 6), '#FFFFFF') + K.piece(rect(362, 1150, 96, 230, 4), '#5B7FB8') + `<circle cx="444" cy="1270" r="7" fill="#F2C14E"/>`;
+  near += K.piece([circle(70, 1370, 44), circle(150, 1364, 52), circle(250, 1372, 40), circle(520, 1368, 46), circle(590, 1374, 38)], '#6FA35A');
+  // the water tower ("UPTON"), its legs standing on the lawn on the right
+  for (const [x0, x1] of [[820, 806], [920, 934]]) near += K.tube(`M ${x0},300 L ${x1},1400`, '#8C97A6', 14);
+  near += K.tube('M 760,300 L 716,1400', '#A3AEBC', 18) + K.tube('M 980,300 L 1024,1400', '#A3AEBC', 18);
+  for (const [ya, yb] of [[420, 760], [760, 1080], [1080, 1390]]) {
+    const xa = 760 - (ya - 300) * 0.04, xb = 980 + (ya - 300) * 0.04, xc = 760 - (yb - 300) * 0.04, xd = 980 + (yb - 300) * 0.04;
+    near += K.tube(`M ${Math.round(xa)},${ya} L ${Math.round(xd)},${yb} M ${Math.round(xb)},${ya} L ${Math.round(xc)},${yb}`, '#8C97A6', 8);
+  }
+  near += K.piece(polygon([[690, 26], [1050, 26], [870, -112]]), '#8FA9BC') + K.piece(circle(870, -118, 13), '#6E7A89');
+  near += K.piece(rect(700, 20, 340, 290, 34), '#A8C3D6');
+  for (const x of [760, 820, 920, 980]) near += line(`M ${x},34 L ${x},296`, 3, '#93AFC3');
+  near += `<text x="870" y="196" text-anchor="middle" font-size="72" font-weight="700" letter-spacing="6" fill="#FFFFFF">UPTON</text>`;
+  near += K.piece(rect(676, 254, 388, 8, 3), '#6E7A89');
+  for (let x = 684; x <= 1056; x += 41) near += `<rect x="${x}" y="256" width="5" height="40" fill="#6E7A89"/>`;
+  near += K.piece(rect(668, 292, 404, 14, 4), '#5E6977');
+  // the fence (one taller post at x 150 to tie things to), then the mailbox
+  let fence = '';
+  for (let x = -40; x < 700; x += 46) fence += polygon([[x, 1316], [x + 15, 1298], [x + 30, 1316], [x + 30, 1440], [x, 1440]]);
+  near += K.piece([rect(-60, 1340, 780, 14), rect(-60, 1400, 780, 14)], '#E4DDD0') + K.piece(fence, '#FBF7EE');
+  near += K.piece([rect(140, 1262, 22, 182, 4), circle(151, 1258, 15)], '#FBF7EE');
+  near += K.piece(rect(292, 1290, 16, 200), '#8A5A3B') + K.piece(pathEl('M 246,1290 L 246,1240 Q 246,1206 300,1206 Q 354,1206 354,1240 L 354,1290 Z'), '#3E6FB0');
+  near += K.piece([rect(354, 1218, 10, 54), rect(354, 1218, 34, 20)], '#D9443B');
+  near += K.piece(rect(-400, 1480, W + 800, 136), '#DCD3C3');
+  for (let x = -320; x < W + 400; x += 160) near += line(`M ${x},1482 L ${x - 30},1612`, 3, '#C7BDAA');
+  near += K.piece(rect(-400, 1612, W + 800, 22), '#BDB3A3') + K.piece(rect(-400, 1634, W + 800, 700), '#6E6A70');
+  for (let x = -360; x < W + 400; x += 220) near += `<rect x="${x}" y="1784" width="120" height="14" rx="7" fill="#E9E2C8" opacity="0.85"/>`;
+  return {
+    far, mid, near, light: { x: 600, y: 900, kind: 'sun' }, shoreY: 1380, top: -700,
+    spots: { tower: [870, 200, 1.35], ladder: [890, 960, 1.2], fence: [250, 1060, 1.45], mailbox: [300, 1260, 1.6], window: [420, 1010, 1.6], roof: [380, 830, 1.4], sky: [560, 320, 1.08] },
+  };
+}
+
+const SCENES = { fjord, dining: () => { const L = diningLayers(); return L.far + L.near + L.front; }, town: () => { const L = townLayers(); return L.far + L.mid + L.near; } };
+const LAYERS = { fjord: fjordLayers, dining: diningLayers, town: townLayers };
 
 module.exports = { SCENES, LAYERS, W, H, GROUND };

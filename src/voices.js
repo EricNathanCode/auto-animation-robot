@@ -63,19 +63,27 @@ function readWav(file) {
 }
 
 // Put every line at its start time and make one voice track, loudness like other shorts (-14 LUFS).
-// Two passes: first measure, then set the loudness exactly (one pass came out too quiet, about -16 LUFS).
+// Voices have sharp peaks, so plain loudnorm stopped at about -15.5 LUFS. Instead: a gentle compressor,
+// gain to about -14, a -3 dB limiter, then a measured (two-pass) loudnorm sets it exactly.
 function mixLines(lines, total, outWav) {
   const inputs = [];
   lines.forEach(l => inputs.push('-i', l.wav.file));
   const parts = lines.map((l, i) => `[${i}:a]adelay=${Math.round(l.start * 1000)}:all=1[a${i}]`);
   const base = lines.map((_, i) => `[a${i}]`).join('') + `amix=inputs=${lines.length}:normalize=0:dropout_transition=0,apad,atrim=0:${total.toFixed(3)}`;
-  let norm = 'loudnorm=I=-14:TP=-1.5:LRA=11';
+  const LN = 'loudnorm=I=-14:TP=-1.5:LRA=11';
+  const measure = chain => {
+    const r = require('child_process').spawnSync(FFMPEG, ['-hide_banner', '-nostats', ...inputs, '-filter_complex', parts.concat(`${base}${chain},${LN}:print_format=json[out]`).join(';'), '-map', '[out]', '-f', 'null', '-'], { encoding: 'utf8', maxBuffer: 64 << 20 });
+    const m = (r.stderr || '').match(/\{[^{}]*"input_i"[^{}]*\}/);
+    return m ? JSON.parse(m[0]) : null;
+  };
+  let chain = ',acompressor=threshold=0.1:ratio=3:attack=5:release=80:makeup=1', norm = LN;
   try {
-    const r = require('child_process').spawnSync(FFMPEG, ['-hide_banner', '-nostats', ...inputs, '-filter_complex', parts.concat(`${base},${norm}:print_format=json[out]`).join(';'), '-map', '[out]', '-f', 'null', '-'], { encoding: 'utf8' });
-    const m = JSON.parse((r.stderr.match(/\{[^{}]*"input_i"[^{}]*\}/) || ['null'])[0]);
+    const m1 = measure(chain);
+    if (m1 && isFinite(+m1.input_i)) chain += `,volume=${(-14 - m1.input_i).toFixed(2)}dB,alimiter=limit=0.708:attack=1:release=50:level=0`;
+    const m = measure(chain);
     if (m) norm += `:measured_I=${m.input_i}:measured_TP=${m.input_tp}:measured_LRA=${m.input_lra}:measured_thresh=${m.input_thresh}:offset=${m.target_offset}:linear=true`;
   } catch (e) { /* fall back to one pass */ }
-  execFileSync(FFMPEG, ['-y', '-v', 'error', ...inputs, '-filter_complex', parts.concat(`${base},${norm},aresample=48000[out]`).join(';'), '-map', '[out]', '-ac', '2', '-c:a', 'pcm_s16le', outWav]);
+  execFileSync(FFMPEG, ['-y', '-v', 'error', ...inputs, '-filter_complex', parts.concat(`${base}${chain},${norm},aresample=48000[out]`).join(';'), '-map', '[out]', '-ac', '2', '-c:a', 'pcm_s16le', outWav]);
   return outWav;
 }
 

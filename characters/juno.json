@@ -1,0 +1,15 @@
+{
+  "id": "juno",
+  "name": "Juno",
+  "role": "Story cast · the best friend (float story)",
+  "goodFor": "What-if stories",
+  "version": "v2",
+  "body": "kid",
+  "skin": "peach",
+  "voice": "girl",
+  "hair": { "style": "puffs", "color": "#3A2418" },
+  "top": { "style": "tee", "color": "#7FC8A9" },
+  "bottom": { "style": "skirt", "color": "#5B7FB8" },
+  "shoes": { "style": "sneakers", "color": "#FFFFFF", "sole": "#D9D4CC" },
+  "wardrobe": ["two round hair puffs", "mint tee", "blue skirt", "white sneakers"]
+}

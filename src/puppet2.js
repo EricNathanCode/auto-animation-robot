@@ -275,7 +275,54 @@ function hairSvg(v, hair) {
     if (v === 'q') return paper(polygon([...arc(0, 0, 104, 104, 135, 335, 36), [80, -50], [50, -56], [24, -50], [6, -36], [-6, -14], [-14, 12], [-24, 38], [-40, 60], [-58, 78]]), col);
     return paper(polygon([...arc(0, 0, 104, 104, 196, 344, 30), [92, -40], [60, -56], [0, -62], [-60, -56], [-92, -40]]), col);
   }
+  if (st === 'spiky') { // a short cut whose top sticks straight UP in spikes (one paper piece with the cap)
+    let base;
+    if (v === 'back') { base = arc(0, 0, 104, 104, 160, 380, 36); for (let i = 0; i <= 8; i++) base.push([97 - i * (194 / 8), i % 2 ? 30 : 40]); }
+    else if (v === 'q') base = [...arc(0, 0, 104, 104, 135, 335, 36), [80, -50], [50, -56], [24, -50], [6, -36], [-6, -14], [-14, 12], [-24, 38], [-40, 60], [-58, 78]];
+    else base = [...arc(0, 0, 104, 104, 196, 344, 30), [92, -40], [60, -56], [0, -62], [-60, -56], [-92, -40]];
+    const n = 5, a0 = v === 'q' ? 222 : 228, a1 = v === 'q' ? 302 : 312, crown = [], rad = a => a * Math.PI / 180;
+    for (let i = 0; i <= n; i++) {
+      crown.push([98 * Math.cos(rad(a0 + (a1 - a0) * i / n)), 98 * Math.sin(rad(a0 + (a1 - a0) * i / n))]);
+      if (i < n) { const u = (i + 0.5) / n; crown.push([104 * 1.12 * Math.cos(rad(a0 + (a1 - a0) * u)) + (v === 'q' ? -6 : 0), -158 - 32 * Math.sin(Math.PI * u)]); }
+    }
+    return paper([polygon(base), polygon(crown)], col);
+  }
+  if (st === 'puffs') { // two round puffs high on the head + a middle part
+    if (v === 'back') return paper([polygon(arc(0, 0, 106, 106, 150, 390, 40)), circle(-86, -84, 44), circle(86, -84, 44)], col) + curlMarks([[-98, -98], [-74, -72], [98, -98], [74, -72]], hi);
+    if (v === 'q') {
+      const p = [...arc(0, 0, 106, 106, 130, 330, 40), [88, -50], [66, -60], [40, -62], [16, -56], [0, -42], [-12, -20], [-22, 6], [-36, 34], [-54, 60], [-68, 76]];
+      return paper([polygon(p), circle(-72, -86, 44), circle(34, -112, 38)], col) + curlMarks([[-86, -100], [-60, -72], [24, -124], [46, -104]], hi);
+    }
+    const p = [...arc(0, 0, 106, 106, 192, 348, 32), [96, -26], [74, -46], [40, -56], [8, -54], [0, -46], [-8, -54], [-40, -56], [-74, -46], [-96, -26]];
+    return paper([polygon(p), circle(-86, -84, 44), circle(86, -84, 44)], col) + curlMarks([[-98, -98], [-74, -72], [98, -98], [74, -72]], hi);
+  }
   return '';
+}
+// a paper party hat: a striped cone with a pom-pom, tipped to one side
+function partySvg(v, h) {
+  const col = h.color || '#E8505B', band = h.band || '#FFD23F', pom = h.pom || '#FFFFFF';
+  const by = -88, ty = -250, w = 48, tx = 8, cx = y => tx * (by - y) / (by - ty), hw = y => w * (y - ty) / (by - ty);
+  let s = paper(polygon([[-w, by], [w, by], [tx, ty]]), col);
+  for (const [f0, f1] of [[0.18, 0.32], [0.5, 0.62]]) {
+    const y0 = by + (ty - by) * f0, y1 = by + (ty - by) * f1;
+    s += `<polygon points="${pts([[cx(y0) - hw(y0), y0], [cx(y0) + hw(y0), y0], [cx(y1) + hw(y1), y1], [cx(y1) - hw(y1), y1]])}" fill="${band}"/>`;
+  }
+  s += paper(circle(tx, ty - 6, 16), pom);
+  return `<g transform="rotate(${v === 'q' ? 14 : -12} 0 ${by})">${s}</g>`;
+}
+// a firefighter's helmet: a red dome with a ridge, a wide brim (longer at the back) and a gold badge
+function fireSvg(v, h) {
+  const red = h.color || '#C8312B', badge = h.band || '#F2C14E', R = 108, rim = -30, a = Math.asin(rim / R) * 180 / Math.PI;
+  let s = paper(ellipse(v === 'q' ? -24 : 0, rim + 2, v === 'q' ? 150 : 142, 20), shade(red, -0.18));
+  s += paper(polygon(arc(0, 0, R, R, 180 - a, 360 + a, 40)), red);
+  s += paper(pathEl(`M -10,${-R + 4} Q 0,${-R - 14} 10,${-R + 4} L 8,${rim - 4} L -8,${rim - 4} Z`), shade(red, -0.1));
+  s += stroke(`M ${r1(-R * 0.55)},${r1(-R * 0.62)} Q ${r1(-R * 0.36)},${r1(-R * 0.82)} -18,${r1(-R * 0.86)}`, '#FFFFFF', 4);
+  if (v !== 'back') {
+    const fx = v === 'q' ? 60 : 0, y0 = v === 'q' ? -80 : -94;
+    s += paper(pathEl(`M ${fx - 24},${y0} L ${fx + 24},${y0} L ${fx + 22},${y0 + 32} Q ${fx},${y0 + 48} ${fx - 22},${y0 + 32} Z`), badge);
+    s += `<circle cx="${fx}" cy="${y0 + 20}" r="7" fill="${shade(badge, -0.4)}"/>`;
+  }
+  return v === 'q' ? `<g transform="rotate(-16)">${s}</g>` : s;
 }
 function helmetSvg(v, h) {
   const steel = h.color || '#A9B4C2', band = h.band || '#B8873A', rivet = shade(band, -0.4);
@@ -332,6 +379,8 @@ function hatSvg(v, hat) {
   if (hat.style === 'helmet') return helmetSvg(v, hat);
   if (hat.style === 'horned') return hornedSvg(v, hat);
   if (hat.style === 'pot') return potSvg(v, hat);
+  if (hat.style === 'party') return partySvg(v, hat);
+  if (hat.style === 'fire') return fireSvg(v, hat);
   return '';
 }
 function beardSvg(v, b) {
@@ -447,6 +496,11 @@ function torsoSvg(v, r, top) {
   } else if (top.style === 'jacket' && v !== 'back') {
     s += stroke(`M ${ox},${hb} L ${ox},${B - 3}`, shade(top.color, -0.28), 2);
     for (const y of [hb + 16, hb + 36, hb + 56]) if (y < B - 8) s += `<circle cx="${ox - 7}" cy="${y}" r="3" fill="${shade(top.color, -0.5)}"/>`;
+  }
+  if (top.stripes) for (const y of [hb + 34, B - 30]) { // reflective bands (a firefighter's coat)
+    if (y > B - 12) continue;
+    s += paper(polygon([[L(y - 8), y - 8], [R(y - 8), y - 8], [R(y + 8), y + 8], [L(y + 8), y + 8]]), top.stripes, 0.8);
+    s += `<path d="M ${r1(L(y) + 1)},${y} L ${r1(R(y) - 1)},${y}" stroke="#E6EEF5" stroke-width="4"/>`;
   }
   return s;
 }

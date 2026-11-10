@@ -1,0 +1,15 @@
+{
+  "id": "wren",
+  "name": "Wren",
+  "role": "Story cast · the narrator, \"me\" (float story)",
+  "goodFor": "What-if stories",
+  "version": "v2",
+  "body": "kid",
+  "skin": "brown",
+  "voice": "girl",
+  "hair": { "style": "spiky", "color": "#2E211B" },
+  "top": { "style": "hoodie", "color": "#F28C28" },
+  "bottom": { "style": "pants", "color": "#3E5C8A" },
+  "shoes": { "style": "sneakers", "color": "#E8505B", "sole": "#FFFFFF" },
+  "wardrobe": ["dark hair that sticks straight up", "orange hoodie", "blue jeans", "red sneakers"]
+}

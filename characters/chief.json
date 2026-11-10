@@ -1,0 +1,16 @@
+{
+  "id": "chief",
+  "name": "Fire Chief",
+  "role": "Story cast · the fire chief (float story)",
+  "goodFor": "What-if stories",
+  "version": "v2",
+  "body": "adult",
+  "skin": "tan",
+  "voice": "man",
+  "hair": { "style": "short", "color": "#5E5A57" },
+  "top": { "style": "jacket", "color": "#3A3F4A", "stripes": "#F2C14E", "collar": "#2A2E36" },
+  "bottom": { "style": "pants", "color": "#3A3F4A" },
+  "shoes": { "style": "boots", "color": "#2A2426" },
+  "hat": { "style": "fire", "color": "#C8312B", "band": "#F2C14E" },
+  "wardrobe": ["red fire helmet with a gold badge", "dark coat with yellow bands", "boots"]
+}

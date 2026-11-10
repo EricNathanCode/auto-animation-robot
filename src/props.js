@@ -38,9 +38,43 @@ function smearSvg(x, y0, y1) {
   s += `<path d="M ${x - 12},${y0 + 6} L ${x - 12},${Math.round(y1 - 10)}" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.35"/>`; // a wet shine
   return s;
 }
-// one prop at its place: { kind, x, y, rot, scale, raw }
-function propSvg(p) {
-  const body = p.kind === 'steak' ? steakSvg(p.raw) : p.kind === 'plate' ? plateSvg() : p.kind === 'smear' ? smearSvg(0, 0, p.len || 0) : '';
+// a party balloon tied at 0,0 (a fence post, a hand); the string goes up "len" and the balloon sways
+function balloonSvg(p, t = 0) {
+  const len = p.len || 220, col = p.color || '#E8505B', a = Math.sin(t * 1.7 + (p.seed || 0)) * 4;
+  let s = `<path d="M 0,0 Q 14,${-len * 0.3} -4,${-len * 0.6} T 0,${-len}" fill="none" stroke="#5B4A44" stroke-width="2.5"/>`;
+  s += P2.paper([P2.ellipse(0, -len - 54, 44, 54), `<path d="M -9,${-len + 4} L 9,${-len + 4} L 0,${-len - 8} Z"/>`], col);
+  s += `<ellipse cx="-15" cy="${-len - 72}" rx="9" ry="17" fill="#FFFFFF" opacity="0.5" transform="rotate(-20 -15 ${-len - 72})"/>`;
+  return `<g transform="rotate(${a.toFixed(2)})">${s}</g>`;
+}
+// a small orange kitten sitting (0,0 = the ground under it), facing right (face -1 = left); the tail swishes
+function kittenSvg(p, t = 0) {
+  const fur = p.color || '#F2A04A', dk = '#C9772A', light = '#FFE6C8', w = Math.sin(t * 3 + (p.seed || 0)) * 10;
+  let s = P2.tube(`M -26,-14 Q -66,-20 ${r1(-62 + w * 0.3)},-58 Q ${r1(-58 + w)},-90 ${r1(-40 + w)},-96`, fur, 14);
+  s += P2.paper(P2.ellipse(0, -40, 40, 42), fur) + P2.paper(P2.ellipse(10, -32, 20, 26), light, 0);
+  s += P2.stroke('M -34,-52 Q -26,-48 -22,-38 M -38,-34 Q -30,-30 -26,-22', dk, 4);
+  s += P2.paper([P2.ellipse(-12, -5, 14, 8), P2.ellipse(20, -5, 14, 8)], light);
+  s += P2.paper([P2.circle(12, -96, 34), '<path d="M -16,-112 L -18,-148 L 8,-126 Z"/>', '<path d="M 20,-127 L 42,-146 L 44,-110 Z"/>'], fur);
+  s += '<path d="M -12,-118 L -13,-138 L 2,-125 Z" fill="#F7A9B8"/><path d="M 24,-125 L 38,-137 L 39,-115 Z" fill="#F7A9B8"/>';
+  s += P2.stroke('M 0,-128 L 2,-117 M 12,-130 L 12,-119 M 24,-128 L 22,-117', dk, 4);
+  s += '<ellipse cx="0" cy="-99" rx="5.5" ry="7.5" fill="#2A211E"/><ellipse cx="25" cy="-99" rx="5.5" ry="7.5" fill="#2A211E"/><circle cx="2" cy="-102" r="2" fill="#FFF"/><circle cx="27" cy="-102" r="2" fill="#FFF"/>';
+  s += '<path d="M 9,-88 L 16,-88 L 12.5,-84 Z" fill="#E86A7A"/>' + P2.stroke('M 12.5,-84 Q 9,-78 4,-80 M 12.5,-84 Q 16,-78 21,-80', '#2A211E', 2);
+  s += P2.stroke('M -6,-88 L -26,-92 M -6,-84 L -26,-82 M 31,-88 L 51,-92 M 31,-84 L 51,-82', '#FFFFFF', 2);
+  return p.face === -1 ? `<g transform="scale(-1,1)">${s}</g>` : s;
+}
+// a firefighter's metal ladder, standing on 0,0 and going up "len"
+function ladderSvg(p) {
+  const len = p.len || 600, w = 74, rail = p.color || '#C9CED6';
+  let s = '';
+  for (let y = -34; y > -len + 12; y -= 46) s += P2.paper(P2.rect(-w / 2, y - 6, w, 12, 4), '#AEB4BE');
+  s += P2.paper([P2.rect(-w / 2 - 10, -len, 14, len, 5), P2.rect(w / 2 - 4, -len, 14, len, 5)], rail);
+  s += P2.paper([P2.rect(-w / 2 - 12, -10, 18, 12, 4), P2.rect(w / 2 - 6, -10, 18, 12, 4)], '#3A3F4A');
+  return s;
+}
+const r1 = n => Math.round(n * 10) / 10;
+// one prop at its place: { kind, x, y, rot, scale, raw }; t = seconds (for swaying balloons, swishing tails)
+function propSvg(p, t = 0) {
+  const body = p.kind === 'steak' ? steakSvg(p.raw) : p.kind === 'plate' ? plateSvg() : p.kind === 'smear' ? smearSvg(0, 0, p.len || 0)
+    : p.kind === 'balloon' ? balloonSvg(p, t) : p.kind === 'kitten' ? kittenSvg(p, t) : p.kind === 'ladder' ? ladderSvg(p) : '';
   const op = p.opacity !== undefined ? ` opacity="${Math.round(p.opacity * 100) / 100}"` : '';
   return `<g transform="translate(${Math.round(p.x * 10) / 10},${Math.round(p.y * 10) / 10}) rotate(${Math.round((p.rot || 0) * 10) / 10}) scale(${p.scale || 1})"${op}>${body}</g>`;
 }
@@ -51,6 +85,20 @@ function birdSvg() {
   s += '<circle cx="62" cy="-48" r="13" fill="#FFFFFF"/><path d="M 55,-55 L 69,-41 M 69,-55 L 55,-41" stroke="#2A211E" stroke-width="4" stroke-linecap="round"/>';
   for (const [x, y] of [[20, -110], [70, -122], [118, -100]]) s += `<path transform="translate(${x},${y})" d="M 0,-14 L 4,-4 L 14,-4 L 6,3 L 9,13 L 0,7 L -9,13 L -6,3 L -14,-4 L -4,-4 Z" fill="#FFD23F" stroke="#C9971E" stroke-width="2"/>`;
   return s;
+}
+// a plain red brick (card art)
+function brickSvg() {
+  let s = P2.paper(P2.rect(-120, -46, 240, 104, 10), '#9C4632') + P2.paper(P2.rect(-120, -58, 240, 96, 10), '#C2583F');
+  for (const [x, y] of [[-80, -30], [-30, 6], [24, -24], [70, 12], [96, -36], [-100, 14]]) s += `<circle cx="${x}" cy="${y}" r="4" fill="#9C4632" opacity="0.7"/>`;
+  return s + P2.stroke('M -100,-46 L 60,-46', '#E07A5F', 5);
+}
+// a duck night light (card art): a glowing yellow duck on a little stand
+function duckLightSvg() {
+  let s = '<circle cx="0" cy="-60" r="150" fill="#FFD84A" opacity="0.22"/><circle cx="0" cy="-60" r="104" fill="#FFE680" opacity="0.35"/><circle cx="0" cy="-60" r="66" fill="#FFF3B0" opacity="0.45"/>';
+  s += P2.paper(P2.rect(-80, -6, 160, 30, 12), '#E8E1F2');
+  s += P2.paper([P2.ellipse(-6, -52, 78, 50), P2.circle(44, -118, 40)], '#FFD84A');
+  s += P2.paper(P2.ellipse(-28, -52, 36, 22, -14), '#F4C232') + P2.paper('<path d="M 80,-118 L 112,-108 L 80,-98 Z"/>', '#F28C28');
+  return s + '<circle cx="56" cy="-126" r="7" fill="#2A211E"/><circle cx="58" cy="-128" r="2.2" fill="#FFF"/>';
 }
 const text = (y, str, size, fill, extra = '') =>
   `<text x="0" y="${y}" text-anchor="middle" font-size="${size}" font-weight="700" fill="${fill}"${extra}>${esc(str)}</text>`;
@@ -89,6 +137,8 @@ function card(spec, u = 0) {
     const as = spec.artScale || 2.3, ay = spec.artY === undefined ? 40 : spec.artY; // the hat's middle is ~107 above its own 0
     if (spec.art.style === 'bird') g += `<g transform="translate(-30,${ay + 40}) scale(${as * 0.9})">${birdSvg()}</g>`;
     else if (spec.art.style === 'steak') g += `<g transform="translate(0,${ay}) scale(${as * 1.3})">${steakSvg(spec.art.raw)}</g>`;
+    else if (spec.art.style === 'brick') g += `<g transform="translate(0,${ay}) scale(${as})">${brickSvg()}</g>`;
+    else if (spec.art.style === 'duck') g += `<g transform="translate(0,${ay + 60 * as}) scale(${as})">${duckLightSvg()}</g>`;
     else g += `<g transform="translate(0,${ay + 107 * as}) scale(${as})">${P2.hatSvg('front', spec.art)}</g>`;
   }
   lines.forEach((t, i) => { g += text(h / 2 - 70 - (lines.length - 1 - i) * 78, t, 66, i === 0 ? accent : ink); });
